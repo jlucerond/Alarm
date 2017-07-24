@@ -7,3 +7,24 @@
 //
 
 import Foundation
+
+class AlarmsController {
+    static var shared = AlarmsController()
+    fileprivate var alarmsArray: [Alarm] = []
+    var numberOfAlarms: Int {
+        return alarmsArray.count
+    }
+    
+    init() {
+        createDummyData()
+    }
+}
+
+extension AlarmsController {
+    func createDummyData() {
+        for x in 1...5 {
+            let newAlarm = Alarm(date: Date(), title: "\(x)", isAlarmOn: (x % 2 == 0))
+            alarmsArray.append(newAlarm)
+        }
+    }
+}

@@ -7,3 +7,15 @@
 //
 
 import Foundation
+
+class Alarm {
+    let date: Date
+    let title: String
+    let isAlarmOn: Bool
+    
+    init(date: Date, title: String, isAlarmOn: Bool) {
+        self.date = date
+        self.title = title
+        self.isAlarmOn = isAlarmOn
+    }
+}

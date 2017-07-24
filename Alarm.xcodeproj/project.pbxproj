@@ -15,6 +15,7 @@
 		D8B8D7EB1F26933900FE2E2C /* AlarmsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B8D7EA1F26933900FE2E2C /* AlarmsController.swift */; };
 		D8B8D7EE1F269F5E00FE2E2C /* AlarmsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B8D7ED1F269F5E00FE2E2C /* AlarmsViewController.swift */; };
 		D8B8D7F01F269F6B00FE2E2C /* AlarmsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B8D7EF1F269F6B00FE2E2C /* AlarmsDetailViewController.swift */; };
+		D8B8D7F21F269FD900FE2E2C /* AlarmTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B8D7F11F269FD900FE2E2C /* AlarmTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		D8B8D7EA1F26933900FE2E2C /* AlarmsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmsController.swift; sourceTree = "<group>"; };
 		D8B8D7ED1F269F5E00FE2E2C /* AlarmsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmsViewController.swift; sourceTree = "<group>"; };
 		D8B8D7EF1F269F6B00FE2E2C /* AlarmsDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmsDetailViewController.swift; sourceTree = "<group>"; };
+		D8B8D7F11F269FD900FE2E2C /* AlarmTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 			children = (
 				D8B8D7D81F2692EF00FE2E2C /* Main.storyboard */,
 				D8B8D7ED1F269F5E00FE2E2C /* AlarmsViewController.swift */,
+				D8B8D7F11F269FD900FE2E2C /* AlarmTableViewCell.swift */,
 				D8B8D7EF1F269F6B00FE2E2C /* AlarmsDetailViewController.swift */,
 			);
 			name = UI;
@@ -175,6 +178,7 @@
 				D8B8D7F01F269F6B00FE2E2C /* AlarmsDetailViewController.swift in Sources */,
 				D8B8D7EB1F26933900FE2E2C /* AlarmsController.swift in Sources */,
 				D8B8D7E91F26932400FE2E2C /* Alarm.swift in Sources */,
+				D8B8D7F21F269FD900FE2E2C /* AlarmTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,6 +20,13 @@ class AlarmsController {
     }
 }
 
+// MARK: - CRUD Functions
+extension AlarmsController {
+    func alarmFor(row: Int) -> Alarm? {
+        return alarmsArray[row]
+    }
+}
+
 extension AlarmsController {
     func createDummyData() {
         for x in 1...5 {

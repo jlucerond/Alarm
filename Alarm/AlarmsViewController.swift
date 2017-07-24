@@ -27,6 +27,7 @@ extension AlarmsViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "alarmCell", for: indexPath) as? AlarmTableViewCell
         cell?.titleLabel.text = currentAlarm.title
         cell?.delegate = self
+        cell?.timeLabel.text = dueDateAsString(alarmDate: currentAlarm.date)
         // FIXME: - How to turn date into text?
         
         return cell ?? UITableViewCell()
@@ -43,5 +44,13 @@ extension AlarmsViewController: AlarmTableViewCellDelegate {
         }
         
         alarm.toggled()
+    }
+}
+
+extension AlarmsViewController {
+    func dueDateAsString(alarmDate: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        return formatter.string(from: alarmDate)
     }
 }

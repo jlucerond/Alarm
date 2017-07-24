@@ -20,7 +20,6 @@ class Alarm {
     }
     
     func toggled() {
-        print("test")
         isAlarmOn = !isAlarmOn
     }
 }

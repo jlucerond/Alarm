@@ -9,7 +9,10 @@
 import UIKit
 
 class AlarmsViewController: UITableViewController {
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
 }
 
 // MARK: - Table View Data Source
@@ -26,15 +29,16 @@ extension AlarmsViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "alarmCell", for: indexPath) as? AlarmTableViewCell
         cell?.titleLabel.text = currentAlarm.title
-        cell?.delegate = self
         cell?.timeLabel.text = dueDateAsString(alarmDate: currentAlarm.date)
-        // FIXME: - How to turn date into text?
+        cell?.switchControl.isOn = currentAlarm.isAlarmOn
+        cell?.delegate = self
         
         return cell ?? UITableViewCell()
     }
     
 }
 
+// MARK: - Alarm Table View Cell Delegate
 extension AlarmsViewController: AlarmTableViewCellDelegate {
     func switchIn(cell: UITableViewCell, wasToggledTo: Bool) {
         // find the item in the cell
@@ -47,6 +51,29 @@ extension AlarmsViewController: AlarmTableViewCellDelegate {
     }
 }
 
+// MARK: - Navigation
+extension AlarmsViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "addNewAlarm" {
+            guard let nextViewController = segue.destination as? AlarmDetailViewController else {
+                return
+            }
+            nextViewController.title = "Add Alarm"
+            
+        } else if segue.identifier == "editAlarm" {
+            guard let nextViewController = segue.destination as? AlarmDetailViewController,
+                let indexPath = tableView.indexPathForSelectedRow,
+                let selectedAlarm = AlarmsController.shared.alarmFor(row: indexPath.row) else {
+                return
+            }
+            
+            nextViewController.alarm = selectedAlarm
+
+        }
+    }
+}
+
+// MARK: - Helper Methods
 extension AlarmsViewController {
     func dueDateAsString(alarmDate: Date) -> String {
         let formatter = DateFormatter()

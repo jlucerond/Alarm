@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Alarm {
+class Alarm: NSObject {
     let date: Date
     let title: String
     var isAlarmOn: Bool

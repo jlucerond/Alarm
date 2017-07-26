@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UserNotifications
 
 class AlarmsController {
     static var shared = AlarmsController()
@@ -26,20 +27,31 @@ extension AlarmsController {
         return alarmsArray[row]
     }
     
-    func addNewAlarmWith(title: String, date: Date, shouldAlert: Bool) {
+    func addNewAlarmWith(title: String, date: Date, shouldAlert: Bool) -> Alarm {
         let newAlarm = Alarm(date: date, title: title, isAlarmOn: shouldAlert)
         alarmsArray.append(newAlarm)
         saveToPersistentData()
+        return newAlarm
     }
     
     func edit(existingAlarm: Alarm, newTitle: String, newDate: Date, shouldAlert: Bool) {
         guard let index = alarmsArray.index(of: existingAlarm),
-        index < numberOfAlarms else {
-            return
+            index < numberOfAlarms else {
+                return
         }
         
-        let newAlarm = Alarm(date: newDate, title: newTitle, isAlarmOn: shouldAlert)
+        let newAlarm = existingAlarm
+        newAlarm.title = newTitle
+        newAlarm.date = newDate
+        newAlarm.isAlarmOn = shouldAlert
+        
         alarmsArray[index] = newAlarm
+        saveToPersistentData()
+    }
+    
+    func alarmWasToggled(alarm: Alarm) {
+        // FIXME: - Best practice here for saving data?
+        alarm.isAlarmOn = !alarm.isAlarmOn
         saveToPersistentData()
     }
     
@@ -50,6 +62,7 @@ extension AlarmsController {
         alarmsArray.remove(at: index)
         saveToPersistentData()
     }
+    
 }
 
 // MARK: - Persistent Functions
@@ -69,17 +82,16 @@ fileprivate extension AlarmsController {
         guard let urlSaveString = documentURLAsString() else { return }
         
         let didSave = NSKeyedArchiver.archiveRootObject(alarmsArray, toFile: urlSaveString)
-
+        
         print("Did successfully save: \(didSave)")
     }
     
     func loadFromPersistentData() {
         guard let saveString = documentURLAsString(),
-        let savedAlarms = NSKeyedUnarchiver.unarchiveObject(withFile: saveString) as? [Alarm] else {
-            print("Do not have a save alarms object")
-            return
+            let savedAlarms = NSKeyedUnarchiver.unarchiveObject(withFile: saveString) as? [Alarm] else {
+                print("Do not have a save alarms object")
+                return
         }
-        print(saveString)
         print("Did successfully load alarms")
         alarmsArray = savedAlarms
     }
@@ -92,12 +104,34 @@ fileprivate extension AlarmsController {
     }
 }
 
-// MARK: - Create Dummy Data
-fileprivate extension AlarmsController {
-    func createDummyData() {
-        for x in 1...5 {
-            let newAlarm = Alarm(date: Date(), title: "Alarm #\(x)", isAlarmOn: (x % 2 == 0))
-            alarmsArray.append(newAlarm)
+// MARK: - AlarmScheduler Protocol Methods
+protocol AlarmScheduler { }
+
+extension AlarmScheduler {
+    func scheduleUserNotification(for alarm: Alarm) {
+        if alarm.isAlarmOn {
+            let content = UNMutableNotificationContent()
+            content.title = alarm.title
+            content.body = alarm.date.description
+            content.badge = 1
+            content.sound = UNNotificationSound.default()
+            
+            let dateComponents = Calendar.current.dateComponents([.hour, .minute],
+                                                                 from: alarm.date)
+            
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents,
+                                                        repeats: true)
+            
+            let request = UNNotificationRequest(identifier: alarm.uniqueID.uuidString,
+                                                content: content,
+                                                trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request,
+                                                   withCompletionHandler: nil)
         }
+    }
+    
+    func cancelUserNotifications(for alarm: Alarm) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [alarm.uniqueID.uuidString])
     }
 }

@@ -51,8 +51,8 @@ extension AlarmsViewController {
     }
 }
 
-// MARK: - Alarm Table View Cell Delegate
-extension AlarmsViewController: AlarmTableViewCellDelegate {
+// MARK: - Alarm Table View Cell Delegate & Saving/Canceling Notification
+extension AlarmsViewController: AlarmTableViewCellDelegate, AlarmScheduler {
     func switchIn(cell: UITableViewCell, wasToggledTo: Bool) {
         // find the item in the cell
         guard let indexPath = tableView.indexPath(for: cell),
@@ -60,7 +60,14 @@ extension AlarmsViewController: AlarmTableViewCellDelegate {
             return
         }
         
-        alarm.toggled()
+        AlarmsController.shared.alarmWasToggled(alarm: alarm)
+        if alarm.isAlarmOn {
+            cancelUserNotifications(for: alarm)
+            scheduleUserNotification(for: alarm)
+        } else {
+            cancelUserNotifications(for: alarm)
+        }
+        
     }
 }
 

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AlarmDetailViewController: UITableViewController {
+class AlarmDetailViewController: UITableViewController, AlarmScheduler {
     // IBOutlets
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var saveButton: UIBarButtonItem!
@@ -26,19 +26,22 @@ class AlarmDetailViewController: UITableViewController {
     }
     
     @IBAction func saveButtonPushed(_ sender: UIBarButtonItem) {
-        //FIXME: - Disable Save Button when text field is empty
         guard let title = titleTextField.text, !title.isEmpty else {
             return
         }
+                
         let date = datePicker.date
 
         if let alarm = alarm {
             // edit alarm
+            cancelUserNotifications(for: alarm)
             AlarmsController.shared.edit(existingAlarm: alarm, newTitle: title, newDate: date, shouldAlert: alarmIsOn)
+            if alarm.isAlarmOn { scheduleUserNotification(for: alarm) }
             navigationController?.popViewController(animated: true)
         } else {
             // create new alarm
-            AlarmsController.shared.addNewAlarmWith(title: title, date: date, shouldAlert: alarmIsOn)
+            let newAlarm = AlarmsController.shared.addNewAlarmWith(title: title, date: date, shouldAlert: alarmIsOn)
+            scheduleUserNotification(for: newAlarm)
             navigationController?.popViewController(animated: true)
         }
         

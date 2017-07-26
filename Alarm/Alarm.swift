@@ -13,65 +13,42 @@ class Alarm: NSObject, NSCoding {
     fileprivate let dateKey = "dateKey"
     fileprivate let titleKey = "titleKey"
     fileprivate let isAlarmOnKey = "isAlarmOnKey"
+    fileprivate let uniqueKey = "uniqueKey"
     
     var date: Date
-    let title: String
+    var title: String
     var isAlarmOn: Bool
+    let uniqueID: UUID
     
     init(date: Date, title: String, isAlarmOn: Bool) {
         self.date = date
         self.title = title
         self.isAlarmOn = isAlarmOn
+        self.uniqueID = UUID()
         super.init()
     }
     
     // MARK: - Saving & Loading Methods
     required init?(coder aDecoder: NSCoder) {
-        guard let dateAsString = aDecoder.decodeObject(forKey: dateKey) as? String,
-            let title = aDecoder.decodeObject(forKey: titleKey) as? String else {
+        guard let date = aDecoder.decodeObject(forKey: dateKey) as? Date,
+            let title = aDecoder.decodeObject(forKey: titleKey) as? String,
+            let uniqueID = aDecoder.decodeObject(forKey: uniqueKey) as? UUID else {
                 return nil
         }
         
-        self.date = Date.distantFuture
+        self.date = date
         self.title = title
         self.isAlarmOn = aDecoder.decodeBool(forKey: isAlarmOnKey)
-        super.init()
+        self.uniqueID = uniqueID
         
-        self.date = turnStringIntoDate(string: dateAsString)
-
+        super.init()
     }
     
     func encode(with aCoder: NSCoder) {
-        let dateAsString = turnDateIntoString(date: date)
-        
         aCoder.encode(title, forKey: titleKey)
         aCoder.encode(isAlarmOn, forKey: isAlarmOnKey)
-        aCoder.encode(dateAsString, forKey: dateKey)
+        aCoder.encode(date, forKey: dateKey)
+        aCoder.encode(uniqueID, forKey: uniqueKey)
     }
-    
-    // MARK: - Instance Methods
-    func toggled() {
-        isAlarmOn = !isAlarmOn
-    }
-}
 
-extension Alarm {
-    func turnDateIntoString(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = .short
-        dateFormatter.dateStyle = .short
-        let myString = dateFormatter.string(from: date)
-        
-        return myString
-    }
-    
-    func turnStringIntoDate(string: String) -> Date {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = .short
-        dateFormatter.dateStyle = .short
-        let myDate = dateFormatter.date(from: string)!
-        
-        return myDate
-    }
 }
-
